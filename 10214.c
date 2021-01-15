@@ -6,9 +6,9 @@ int main(){
             scanf("%d %d", &Y, &K);
             sumK+=K; sumY+=Y;
         }
-        if(sumY>sumK) printf("Yonsei");
-        else if(sumY==sumK) printf("Draw");
-        else printf("Korea");
+        if(sumY>sumK) printf("Yonsei\n");
+        else if(sumY==sumK) printf("Draw\n");
+        else printf("Korea\n");
         sumK=0; sumY=0;
     }
 }
