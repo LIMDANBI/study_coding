@@ -1,0 +1,6 @@
+#include<iostream>
+using namespace std;
+int main(){
+    int n; cin>>n;
+    n?cout<<"Leading the Way to the Future":cout<<"YONSEI";
+}
