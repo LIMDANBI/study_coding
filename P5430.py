@@ -25,20 +25,17 @@ for i in range(T):
     if is_error:
         print("error")
     else:
-        if len(n_list)==0:
-            print('[]')
+        print('[', end='')
+        if is_reverse % 2:
+            for i in range(len(n_list) - 1, -1, -1):
+                if i == len(n_list) - 1:
+                    print(n_list[i], end='')
+                else:
+                    print(',', n_list[i], sep='', end='')
         else:
-            print('[', end='')
-            if is_reverse % 2:
-                for i in range(len(n_list)-1, -1, -1):
-                    if i==len(n_list)-1:
-                        print(n_list[i], end='')
-                    else:
-                        print(',', n_list[i], sep='', end='')
-            else:
-                for i in range(len(n_list)):
-                    if i==0:
-                        print(n_list[i], end='')
-                    else:
-                        print(',', n_list[i], sep='', end='')
-            print(']')
+            for i in range(len(n_list)):
+                if i == 0:
+                    print(n_list[i], end='')
+                else:
+                    print(',', n_list[i], sep='', end='')
+        print(']')
