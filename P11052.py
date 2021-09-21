@@ -1,6 +1,5 @@
 N = int(input())
 card_pack = list(map(int, input().split()))
-ans = 0
 dp = [card_pack[0], card_pack[0]]
 for i in range(2, N+1):
     tmp=0
