@@ -3,7 +3,6 @@ def solution():
     input = sys.stdin.readline
     n = int(input())
     if n%2== 1: print("Either")
-    else:
-        if n//2 % 2 == 0: print("Even")
-        else: print("Odd")
+    elif n%4 == 0: print("Even")
+    else: print("Odd")
 solution()
