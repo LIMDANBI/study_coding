@@ -13,7 +13,6 @@ int main(){
             int tmpz = ((y+mid)*100)/(x+mid);
             if(z<tmpz) high=mid-1;
             else low=mid+1;
-        }
-        cout << low;
+        } cout << low;
     }
 }
