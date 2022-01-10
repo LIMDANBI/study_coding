@@ -5,7 +5,7 @@ int root[1000001];
 
 int find_(int x){
     if(root[x]==x) return x;
-    return root[x] = find_(root[x]); // 경로 압축
+    return root[x] = find_(root[x]);
 }
 
 void union_(int a, int b){
