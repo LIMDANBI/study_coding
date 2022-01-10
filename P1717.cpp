@@ -1,18 +1,15 @@
 #include<iostream>
-#include<vector>
 using namespace std;
 
 int root[1000001];
 
 int find_(int x){
     if(root[x]==x) return x;
-    return root[x] = find_(root[x]);
+    return root[x] = find_(root[x]); // 경로 압축
 }
 
 void union_(int a, int b){
-    int x = find_(a), y = find_(b);
-    if(x<y) root[y] = x;
-    else root[x] = y;
+	root[find_(a)] = find_(b);
 }
 
 int main(){
@@ -22,9 +19,7 @@ int main(){
     for(int i=0; i<m; i++){
         int oper, a, b; cin>>oper>>a>>b;
         if(oper == 0) union_(a, b);
-        else{
-            if(find_(a)==find_(b)) cout << "YES\n";
-            else cout << "NO\n";
-        } 
+        else if(find_(a)==find_(b)) cout << "YES\n";
+        else cout << "NO\n";
     }
 }
