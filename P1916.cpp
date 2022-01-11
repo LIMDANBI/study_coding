@@ -10,6 +10,7 @@ using namespace std;
 int N, M, S, E, dist[MAX_N]{};
 struct Data{int end, weight;};
 vector<Data> eg[MAX_M];
+bool visit[MAX_N]={false};
 
 void dijkstra(){
     priority_queue<pair<int, int>> pq;
@@ -17,8 +18,9 @@ void dijkstra(){
     while (!pq.empty()){
         int nownode = pq.top().second; 
         int distance = pq.top().first*(-1);
-        pq.pop();
-        if(dist[nownode]<distance) continue; //이미 담긴 것보다 distance가 크면 pass
+        pq.pop(); 
+        if(visit[nownode]) continue; // 이미 방문한 경우 재방문 x
+        visit[nownode] = true;
         for(int i=0; i<eg[nownode].size(); i++){
             int new_cost = dist[nownode] + eg[nownode][i].weight;
             int before_cost = dist[eg[nownode][i].end];
