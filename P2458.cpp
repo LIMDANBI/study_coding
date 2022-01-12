@@ -7,6 +7,7 @@ int N, M, a, b;
 int cost[MAX_N][MAX_N]={};
 
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
     cin>>N>>M;
     for(int i=1; i<=N; i++){
         for(int j=1; j<=N; j++) cost[i][j] = INF;
