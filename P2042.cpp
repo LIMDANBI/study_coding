@@ -33,7 +33,7 @@ int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     cin>>n>>m>>k;
     for(int i=0; i<n; i++){
-        int tmp; cin>> tmp;
+        long long tmp; cin>> tmp;
         arr.push_back(tmp);
     }
     int tree_size = 1;
