@@ -6,12 +6,13 @@ using namespace std;
 int N, M, a, b, w;
 char op;
 int parent[MAX_N];
-long long dist[MAX_N];
+long long dist[MAX_N]; // dist[x]=y : node x 는 root node 보다 y만큼 무겁다! 
 
 int find(int node){
     if(parent[node] == node) return node; // root node의 번호는 자기 자신
+    int p = find(parent[node]); // 상위 node dist 먼저 update
     dist[node]+=dist[parent[node]]; // dist update
-    return parent[node] = find(parent[node]); // 각 node의 부모를 찾아 올라감 (재귀, 경로 단축)
+    return parent[node] = p;
 }
 
 void uni(int a, int b, int w){
@@ -30,11 +31,11 @@ int main(){
         memset(dist, 0, sizeof(dist)); // dist 배열 초기화 
         while (M--){
             cin>> op;
-            if(op=='!'){
+            if(op=='!'){ // 무게를 재는 경우
                 cin >> a >> b >> w;
                 uni(a, b, w);
             }
-            else if(op=='?'){
+            else if(op=='?'){ // 교수님의 질문인 경우
                 cin >> a >> b;
                 if(find(a)!=find(b)) cout << "UNKNOWN\n"; // 비교가 불가능한 경우
                 else cout << dist[b]-dist[a] << '\n'; // 비교가 가능한 경우
