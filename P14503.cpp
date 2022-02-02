@@ -7,34 +7,27 @@ int space[MAX][MAX];
 int dr[] = {-1, 0, 1, 0}; // 북, 동, 남, 서
 int dc[] = {0, 1, 0, -1};
 
-int direction(int d){ // 현재 방향에서 왼쪽 방향을 반환
-    if(d==0) return 3;
-    if(d==1) return 0;
-    if(d==2) return 1;
-    if(d==3) return 2;
-}
-
 void clean(int r, int c, int d){
     if(space[r][c]==0){
         space[r][c] = -1; // 현재 위치를 청소
         ans++;
     }
     for(int i=0; i<4; i++){ // 조건에 따라 탐색 진행
-        int nd = direction(d);
-        int nr = r + dr[nd];
-        int nc = c + dc[nd];
+        int nd = (d+3-i)%4; // 반시계 방향
+        int nr = r+dr[nd];
+        int nc = c+dc[nd];
 
-        if(nr<0 || nr>=N || nc<0 || nc>=M) continue; // 범위를 벗어나는 경우
-        if(space[nr][nc]==0) clean(nr, nc, nd); // 청소가 가능한 경우
+        if(nr<0 || nr>=N || nc<0 || nc>=M) continue; // 범위를 벗어난 경우
+        if(space[nr][nc]==0) return clean(nr, nc, nd); // 청소가 가능한 경우
     }
 
-    // 뒤로 한칸 후진
+    // 뒤로 한칸 후진 (북 <-> 남 / 동 <-> 서)
     int nd = (d+2)%4;
-    int nr = r + dr[nd];
-    int nc = c + dc[nd];
+    int nr = r+dr[nd];
+    int nc = c+dc[nd];
 
     if(nr<0 || nr>=N || nc<0 || nc>=M || space[nr][nc]==1) return; // 범위를 벗어나거나, 뒤에 벽이 있어 후진하지 못하는 경우
-    clean(nr, nc, d); // 후진할 수 있는 경우, 방향을 유지하며 후진
+    clean(nr, nc, d); // 후진할 수 있는 경우, 방향을 유지하며 후진한 후 탐색
 }
 
 int main(){
