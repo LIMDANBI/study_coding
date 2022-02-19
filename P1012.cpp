@@ -1,20 +1,21 @@
 #include<iostream>
+#include<cstring>
 #include<queue>
 #define MAX 50
 using namespace std;
 
 int T, M, N, K;
-int field[50][50];
-int dx[] = {-1, 1, 0, 0};
+int field[MAX][MAX];
 int dy[] = {0, 0, -1, 1};
+int dx[] = {-1, 1, 0, 0};
 
-int bfs(int x, int y){
-    field[x][y] = 0;
+void dfs(int y, int x){
+    field[y][x] = 0;
     for(int i=0; i<4; i++){
-        int nx = x + dx[i];
         int ny = y + dy[i];
-        if(nx<0 || nx>=N || ny<0 || ny>=M) continue;
-        else if(field[nx][ny]==1) bfs(nx, ny);
+        int nx = x + dx[i];
+        if(ny<0 || ny>=N || nx<0 || nx>=M) continue; // 범위를 벗어난 경우 
+        else if(field[ny][nx]==1) dfs(ny, nx); // 인근에 배추가 위치한 경우 방문
     }
 }
 
@@ -22,18 +23,22 @@ int main(){
     ios_base::sync_with_stdio(0); cin.tie(0);
     cin >> T;
     while (T--){
-        cin >> M >> N >> K;
+        int y, x, ans=0;
         queue<pair<int, int> > q; 
-        int x, y, ans=0;
-        for(int i=0; i<K; i++){
+
+        memset(field, 0, sizeof(field)); // 초기화
+        cin >> M >> N >> K;
+        while(K--){
             cin >> x >> y;
-            q.push({x,y});
-            field[x][y] = 1;
+            q.push({y, x}); // 배추 좌표 저장
+            field[y][x] = 1; // y,x 위치에 배추 있음 표시
         }
         while (!q.empty()){
-            int x = q.front().first, y = q.front().second;
-            if(field[x][y]==1) {
-                bfs(x, y);
+            int y = q.front().first;
+            int x = q.front().second; 
+            q.pop();
+            if(field[y][x]==1) { // 이미 방문하지 않은 경우
+                dfs(y, x); // 방문하고, 주변 탐색까지 진행!
                 ans++;
             }
         }
