@@ -2,6 +2,7 @@
 #include <utility>
 #include <vector>
 #include <algorithm>
+#include<cmath>
 using namespace std;
 
 bool compare(const pair<int, int>& a, const pair<int, int>& b){
@@ -10,6 +11,7 @@ bool compare(const pair<int, int>& a, const pair<int, int>& b){
 }
 
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
     int n, tmp, sum=0, isin=0, idx; cin >> n;
     vector<int> num; vector<pair<int, int>> frequency;
     for(int i=0; i<n; i++){
@@ -23,10 +25,11 @@ int main(){
     }
     sort(num.begin(), num.end());
     sort(frequency.begin(), frequency.end(), compare);
-    cout << fixed; cout.precision(0);
-    cout << sum/(double)n << '\n';
-    cout << num[n/2] <<'\n';
-    if(frequency[0].first == frequency[1].first) cout << frequency[1].second << '\n';
+    int mean = round(sum/(double)n);
+    cout << mean << '\n'; // 산술평균
+    cout << num[n/2] <<'\n'; // 중앙값
+    // 최빈값
+    if(frequency[0].first == frequency[1].first) cout << frequency[1].second << '\n'; 
     else cout << frequency[0].second << '\n';
-    cout << num[n-1]-num[0] << '\n';
+    cout << num[n-1]-num[0] << '\n'; // 범위
 }
