@@ -26,7 +26,6 @@ void topologySort(){ // 위상정렬을 통해 가수들의 출연 순서를 정
     if(ans.size()!=N) cout << 0; // 순서를 정하는 것이 불가능한 경우, 0 출력
     else { // 가능한 경우, 순서 출력
         for(int i=0; i<N; i++) cout << ans[i] << '\n';
-        cout << '\n';
     }
 }
 
