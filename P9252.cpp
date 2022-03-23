@@ -16,13 +16,14 @@ void solution(){
     int lenLcs = dp[i][j];
     
     string lcs="";
-    while (lcs.length()!=lenLcs){ // LCS를 구함
+    while (1){ // LCS를 구함
         if(dp[i][j] == dp[i-1][j-1]) { i--; j--;}
         else if(dp[i][j] == dp[i-1][j]) i--;
         else {
             lcs+=s1[i-1];
             i--; j--;
         }
+        if(lcs.length()==lenLcs) break;
     }    
     cout << lenLcs << '\n';
     for(i = lcs.length()-1; i>=0; i--) cout << lcs[i];
