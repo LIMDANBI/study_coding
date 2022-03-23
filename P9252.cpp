@@ -7,7 +7,7 @@ int dp[MAX][MAX];
 
 void solution(){ 
     int i, j;
-    for(i=0; i<s1.length(); i++){ // // DP를 통해 LCS 길이를 구함
+    for(i=0; i<s1.length(); i++){ // DP를 통해 LCS 길이를 구함
         for(j=0; j<s2.length(); j++){
             if(s1[i] == s2[j]) dp[i+1][j+1] = dp[i][j]+1;
             else dp[i+1][j+1] = max(dp[i][j+1], dp[i+1][j]);
@@ -20,9 +20,8 @@ void solution(){
         if(dp[i][j] == dp[i-1][j-1]) { i--; j--;}
         else if(dp[i][j] == dp[i-1][j]) i--;
         else {
-            lcs+=s1[i];
-            if(dp[i][j] != dp[i-1][j-1]){ i--; j--;}
-            else i--;
+            lcs+=s1[i-1];
+            i--; j--;
         }
     }    
     cout << lenLcs << '\n';
