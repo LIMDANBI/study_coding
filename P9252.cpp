@@ -19,6 +19,7 @@ void solution(){
     while (1){ // LCS를 구함
         if(dp[i][j] == dp[i-1][j-1]) { i--; j--;}
         else if(dp[i][j] == dp[i-1][j]) i--;
+        else if(dp[i][j] == dp[i][j-1]) j--;
         else {
             lcs+=s1[i-1];
             i--; j--;
