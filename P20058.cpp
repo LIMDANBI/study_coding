@@ -88,7 +88,7 @@ int main(){
         for(int j=1; j<=N; j++) cin >> A[i][j];
     }
     while(Q--){ // 파이어스톰을 Q번 시전
-        cin >> L;
+        cin >> L; L= pow2[L];
         fireStorm();
     }
     ans(); // remain_ice와 largest_mass를 구하고 출력
