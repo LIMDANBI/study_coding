@@ -1,4 +1,4 @@
-#include <iostream>
+#include<iostream>
 #include<cstring>
 #include<queue>
 #define MAX 65
@@ -13,11 +13,11 @@ int dx[] = {0, 0, -1, 1};
 int pow2[] = {1, 2, 4, 8, 16, 32, 64};
 
 void fireStorm(){
-    for(int i=1; i<=pow2[N]; i+=pow2[L]){ // 시계 방향 회전
-        for(int j=1; j<=pow2[N]; j+=pow2[L]){
+    for(int i=1; i<=N; i+=L){ // 시계 방향 회전
+        for(int j=1; j<=N; j+=L){
             queue<int> q;
-            int endR = i+pow2[L];
-            int endC = j+pow2[L];
+            int endR = i+L;
+            int endC = j+L;
             for(int r=i; r<endR; r++){
                 for(int c=j; c<endC; c++) q.push(A[r][c]);
             }
@@ -31,20 +31,20 @@ void fireStorm(){
     }
 
     memset(reduce, false, sizeof(reduce)); // 감소 여부 false로 초기화
-    for(int y=1; y<=pow2[N]; y++){ // 얼음양 감소
-        for(int x=1; x<=pow2[N]; x++){
+    for(int y=1; y<=N; y++){ // 얼음양 감소
+        for(int x=1; x<=N; x++){
             int cnt=0;
             for(int d=0; d<4; d++){
                 int ny = y+dy[d];
                 int nx = x+dx[d];
-                if(ny<1 || ny>pow2[N] || nx<1 || nx>pow2[N] || A[ny][nx]==0) continue; // 범위를 벗어나거나 얼음이 없는 경우
+                if(ny<1 || ny>N || nx<1 || nx>N || A[ny][nx]==0) continue; // 범위를 벗어나거나 얼음이 없는 경우
                 cnt++; 
             }
             if(cnt<3 && A[y][x]>0) reduce[y][x] = true; // 얼음이 있는 칸 3개 또는 그 이상과 인접해있지 않은 경우, 감소 여부 true
         }
     }
-    for(int y=1; y<=pow2[N]; y++){
-        for(int x=1; x<=pow2[N]; x++){
+    for(int y=1; y<=N; y++){
+        for(int x=1; x<=N; x++){
             if(reduce[y][x]) A[y][x]--;
         }
     }
@@ -62,7 +62,7 @@ void bfs(int i, int j){ // largest_mass
         for(int d=0; d<4; d++){
             int ny = y+dy[d];
             int nx = x+dx[d];
-            if(ny<1 || ny>pow2[N] || nx<1 || nx>pow2[N] || visit[ny][nx] || A[ny][nx]<1) continue; // 범위를 벗어나는 경우, 이미 방문한 경우, 얼음이 없는 경우
+            if(ny<1 || ny>N || nx<1 || nx>N || visit[ny][nx] || A[ny][nx]<1) continue; // 범위를 벗어나는 경우, 이미 방문한 경우, 얼음이 없는 경우
             visit[ny][nx] = true;
             q.push({ny, nx});
             res++;
@@ -72,8 +72,8 @@ void bfs(int i, int j){ // largest_mass
 }
 
 void ans(){
-    for(int i=1; i<=pow2[N]; i++){
-        for(int j=1; j<=pow2[N]; j++) {
+    for(int i=1; i<=N; i++){
+        for(int j=1; j<=N; j++) {
             remain_ice+=A[i][j]; // remain_ice
             if(!visit[i][j] && A[i][j]) bfs(i, j); // largest_mass
         }
@@ -83,9 +83,9 @@ void ans(){
 
 int main(){
     ios_base::sync_with_stdio(0); cin.tie(0);
-    cin >> N >> Q;
-    for(int i=1; i<=pow2[N]; i++){
-        for(int j=1; j<=pow2[N]; j++) cin >> A[i][j];
+    cin >> N >> Q; N = pow2[N];
+    for(int i=1; i<=N; i++){
+        for(int j=1; j<=N; j++) cin >> A[i][j];
     }
     while(Q--){ // 파이어스톰을 Q번 시전
         cin >> L;
