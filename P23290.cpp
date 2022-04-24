@@ -1,13 +1,14 @@
 #include<iostream>
 #include<vector>
 #define SIZE 5
+#define MOVE 3
 using namespace std;
 
 int M, S;
 int sy, sx, maxEat;
 int smell[SIZE][SIZE];
 bool visit[SIZE][SIZE];
-int way[4]={0}, copyWay[4]={0};
+int way[MOVE]={0}, copyWay[MOVE]={0};
 vector<int> map[SIZE][SIZE], copyMap[SIZE][SIZE];
 
 int sdy[] = {-1, 1, 0, 0}; // 상 하 좌 우 (상어 방향)
@@ -32,13 +33,17 @@ void moveFish(){ // 물고기 이동
                 for(int d=0; d<8; d++){
                     int ny = i+fdy[dir];
                     int nx = j+fdx[dir];
-                    if(ny<1 || ny>4 || nx<1 || nx>4 || smell[ny][nx]) continue; // 범위를 벗어나거나 냄새가 있는 경우
-                    if(ny==sy && nx==sx) continue; // 상어가 있는 경우
-                    ismove = true; // 이동 가능
-                    moveMap[ny][nx].push_back(dir);
                     dir--; if(dir<0) dir = 7; // 반시계 방향 회전
+                    if(ny<1 || ny>4 || nx<1 || nx>4 || smell[ny][nx] || ny==sy&&nx==sx) continue; // 범위를 벗어나는 경우, 냄새가 있는 경우, 상어가 있는 경우
+                    ismove = true; // 이동 가능
+                    dir++; if(dir>7) dir=0;
+                    moveMap[ny][nx].push_back(dir);
+                    break;
                 }
-                if(!ismove) moveMap[i][j].push_back(dir);
+                if(!ismove){
+                    dir--; if(dir<0) dir = 7; 
+                    moveMap[i][j].push_back(dir);
+                }
             }
         }
     }
@@ -51,7 +56,7 @@ void findWay(int y, int x, int eat, int cnt){ // 상어의 이동동선을 찾�
     if(cnt==3){ // 이동 3번이 마무리 된 경우
         if(maxEat<eat){
             maxEat = eat;
-            for(int i=0; i<3; i++)
+            for(int i=0; i<MOVE; i++)
                 way[i] = copyWay[i];
         }
         return;
@@ -62,19 +67,16 @@ void findWay(int y, int x, int eat, int cnt){ // 상어의 이동동선을 찾�
         nx = x+sdx[d];
         if(ny<1 || ny>4 || nx<1 || nx>4) continue; // 범위를 벗어나는 경우
         copyWay[cnt] = d;
-        if(visit[ny][nx])
-            findWay(y, x, eat, cnt+1);
-        else{
-            visit[ny][nx] = true;
-            findWay(ny, nx, eat+map[ny][nx].size(), cnt+1);
-            visit[ny][nx] = false;
-        }
+        if(visit[ny][nx]) continue;
+        visit[ny][nx] = true;
+        findWay(ny, nx, eat+map[ny][nx].size(), cnt+1);
+        visit[ny][nx] = false;
     }
 }
 
 void moveShark(){ // 상어 이동
     int y=sy, x=sx;
-    for(int i=0; i<3; i++){
+    for(int i=0; i<MOVE; i++){
         y+=sdy[way[i]];
         x+=sdx[way[i]];
         if(map[y][x].size()) smell[y][x] = 3;
@@ -86,7 +88,7 @@ void moveShark(){ // 상어 이동
 void removeSmell(){ // 물고기 냄세 제거
     for(int i=1; i<SIZE; i++){
         for(int j=1; j<SIZE; j++){
-            if(smell[i][j]) smell[i][j]--;
+            if(smell[i][j]>0) smell[i][j]--;
         }
     }
 }
