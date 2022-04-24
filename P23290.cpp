@@ -48,40 +48,42 @@ void moveFish(){ // 물고기 이동
         }
     }
     for(int i=1; i<SIZE; i++){
-        for(int j=1; j<SIZE; j++) map[i][j] = moveMap[i][j];
+        for(int j=1; j<SIZE; j++)
+            map[i][j] = moveMap[i][j];
     }
 }
 
 void findWay(int y, int x, int eat, int cnt){ // 상어의 이동동선을 찾음
     if(cnt==3){ // 이동 3번이 마무리 된 경우
         if(maxEat<eat){
-            maxEat = eat;
+            maxEat = eat; // 최대로 먹을 수 있는 물고기 수 update
             for(int i=0; i<MOVE; i++)
-                way[i] = copyWay[i];
+                way[i] = copyWay[i]; // 경로 저장
         }
         return;
     }
-    int ny, nx;
     for(int d=0; d<4; d++){
-        ny = y+sdy[d];
-        nx = x+sdx[d];
+        int ny = y+sdy[d];
+        int nx = x+sdx[d];
         if(ny<1 || ny>4 || nx<1 || nx>4) continue; // 범위를 벗어나는 경우
         copyWay[cnt] = d;
-        if(visit[ny][nx]) continue;
-        visit[ny][nx] = true;
-        findWay(ny, nx, eat+map[ny][nx].size(), cnt+1);
-        visit[ny][nx] = false;
+        if(visit[ny][nx]) findWay(ny, nx, eat, cnt+1);
+        else{
+            visit[ny][nx] = true;
+            findWay(ny, nx, eat+map[ny][nx].size(), cnt+1); // 재방문 하지 않은 곳 물고기 수 더함
+            visit[ny][nx] = false;
+        }
     }
 }
 
 void moveShark(){ // 상어 이동
-    int y=sy, x=sx;
+    maxEat = -1;
+    findWay(sy, sx, 0, 0); // 물고기를 가장 많이 잡아먹을 수 있는 이동 동선을 찾음
     for(int i=0; i<MOVE; i++){
-        y+=sdy[way[i]];
-        x+=sdx[way[i]];
-        if(map[y][x].size()) smell[y][x] = 3;
-        map[y][x].clear();
-        sy=y; sx=x;
+        sy+=sdy[way[i]];
+        sx+=sdx[way[i]];
+        if(map[sy][sx].size()) smell[sy][sx] = 3;
+        map[sy][sx].clear();
     }
 }
 
@@ -116,8 +118,6 @@ int main(){
     while (S--){
         copyFish(); // 물고기 복제 시작
         moveFish(); // 물고기 이동
-        maxEat = -1;
-        findWay(sy, sx, 0, 0); // 물고기를 가장 많이 잡아먹을 수 있는 이동 동선을 찾음
         moveShark(); // 상어 이동
         removeSmell(); // 물고기 냄세 제거
         finshCopy(); // 물고기 복제 완료
