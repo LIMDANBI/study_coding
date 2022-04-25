@@ -35,6 +35,14 @@ void init(){
     while(!blockGroup.empty()) blockGroup.pop();
 }
 
+void turnRainbow(){ // 무지개는 중복으로 가질 수 o
+    for(int i=1; i<=N; i++){
+        for(int j=1; j<=N; j++){
+            if(map[i][j]==RAINBOW) visit[i][j]=false;
+        }
+    }  
+}
+
 pair<int, int> findGroup(int i, int j, int color){
     int groupSize=1;
     int rbowSize=0;
@@ -120,6 +128,7 @@ void autoPlay(){ // 블록 그룹이 존재하는 동안 반복
         for(int j=1; j<=N; j++){
             if(map[i][j]==BLACK || map[i][j]==RAINBOW || map[i][j]==EMPTY || visit[i][j]) continue;
             pair<int, int> res = findGroup(i, j, map[i][j]); // BFS로 group check
+            turnRainbow(); // 무지개는 중복으로 가질 수 o
             int cnt=res.first, rbow=res.second;
             if(cnt>=2) blockGroup.push({cnt, rbow, i, j}); // 기준 block을 pq에 저장 (그룹에 속한 블록의 개수는 2보다 크거나 같아야 함)
         }
