@@ -15,12 +15,15 @@ int dy[] = {-1, 1, 0, 0};
 int dx[] = {0, 0, -1, 1};
 
 struct POS { int y, x; };
-struct GROUP { int cnt, y, x; };
+struct GROUP { int cnt, rbow, y, x; };
 struct compare{
     bool operator()(const GROUP& g1, const GROUP& g2) { // operator() 메서드 재정의
         if(g1.cnt == g2.cnt){
-            if(g1.y == g2.y) return g1.x < g2.x;
-            return g1.y < g2.y;
+            if(g1.rbow == g2.rbow){
+                if(g1.y == g2.y) return g1.x < g2.x;
+                return g1.y < g2.y;   
+            }
+            return g1.rbow < g2.rbow;
         }
 		return g1.cnt < g2.cnt;
 	}
@@ -32,8 +35,9 @@ void init(){
     while(!blockGroup.empty()) blockGroup.pop();
 }
 
-int findGroup(int i, int j, int color){
+pair<int, int> findGroup(int i, int j, int color){
     int groupSize=1;
+    int rbowSize=0;
     queue<POS> q;
     visit[i][j] = true;
     q.push({i, j});
@@ -47,12 +51,13 @@ int findGroup(int i, int j, int color){
             if(ny<1 || ny>N || nx<1 || nx>N) continue; // 범위를 벗어나는 경우
             if(map[ny][nx]==EMPTY || visit[ny][nx]) continue; // 비어 있거나, 이미 방문한 경우
             if(map[ny][nx]==BLACK || map[ny][nx]!=RAINBOW && map[ny][nx]!=color) continue; // black block이거나 다른 색인 경우 (무지개는 허용)
+            if(map[ny][nx]==RAINBOW) rbowSize++:
             visit[ny][nx] = true; // 방문
             groupSize++;
             q.push({ny, nx});
         }
     }
-    return groupSize;
+    return {groupSize, rbowSize};
 }
 
 void rmeoveGroup(){
