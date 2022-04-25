@@ -17,13 +17,12 @@ void moveFireball(){
             for(int k=0; k<map[i][j].size(); k++){
                 int m = map[i][j][k].m; // 질량
                 int s = map[i][j][k].s; // 속력
+                int move = s%N;
                 int d = map[i][j][k].d; // 방향
-                int ny = i+dy[d]*s;
-                int nx = j+dx[d]*s;
-                while (ny<1) ny+=N; // 1번 행은 N번 행과 연결 
-                while (ny>N) ny-=N;
-                while (nx<1) nx+=N; // 1번 열은 N번 열과 연결
-                while (nx>N) nx-=N;
+                int ny = i+dy[d]*move;
+                int nx = j+dx[d]*move;
+                if(ny<1) ny+=N; if(ny>N) ny-=N; // 1번 행은 N번 행과 연결 
+                if(nx<1) nx+=N; if(nx>N) nx-=N; // 1번 열은 N번 열과 연결
                 tmpMap[ny][nx].push_back({m, s, d});
             }
         }
