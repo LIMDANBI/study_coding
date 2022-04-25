@@ -20,8 +20,10 @@ void moveFireball(){
                 int d = map[i][j][k].d; // 방향
                 int ny = i+dy[d]*s;
                 int nx = j+dx[d]*s;
-                if(ny<1) ny+=ny/(ny*N); if(ny>4) ny-=ny/(ny*N); // 1번 행은 N번 행과 연결
-                if(nx<1) nx+=ny/(ny*N); if(nx>4) nx-=ny/(ny*N); // 1번 열은 N번 열과 연결
+                while (ny<1) ny+=N; // 1번 행은 N번 행과 연결 
+                while (ny>N) ny-=N;
+                while (nx<1) nx+=N; // 1번 열은 N번 열과 연결
+                while (nx>N) nx-=N;
                 tmpMap[ny][nx].push_back({m, s, d});
             }
         }
@@ -70,7 +72,6 @@ int main(){
     while(K--){ // K번 이동 명령
         moveFireball(); // 파이어볼 이동
         afterMove(); // 파이어볼 이동 후
-        // printMap();
     }
     for(int i=1; i<=N; i++){
         for(int j=1; j<=N; j++){
