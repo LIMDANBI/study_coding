@@ -22,7 +22,7 @@ int Dx[] = {0, 0, -1, 1};
 
 void spredVirus(queue<POS> Q){
     int time=0, infect_cnt=0; // 걸린 시간, 감염된 칸
-    while (!Q.empty()){
+    while (!Q.empty() && infect_cnt<empty_cnt){
         int y = Q.front().y;
         int x = Q.front().x;
         Q.pop();
@@ -59,7 +59,7 @@ void setVirus(int idx, int cnt){ // backtracking
     for(int i=idx; i<Virus.size(); i++){
         if(Active[i]) continue;
         Active[i] = true; // Active on
-        setVirus(idx+1, cnt+1);
+        setVirus(i+1, cnt+1);
         Active[i] = false; // Active off
     }
 }
