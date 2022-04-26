@@ -1,5 +1,4 @@
 #include<iostream>
-#include<vector>
 #include<queue>
 #define MAX 50
 #define EMPTY 0
@@ -10,7 +9,6 @@ POS Shark;
 
 int N, M, ans=0;
 int map[MAX][MAX];
-vector<POS> order;
 int dy[] = {0, 1, 0, -1}; // 좌 하 우 상
 int dx[] = {-1, 0, 1, 0};
 int dr[] = {-1, 1, 0, 0}; // ↑, ↓, ←, →
