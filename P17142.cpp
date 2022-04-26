@@ -20,7 +20,7 @@ int Map[MAX][MAX], Time[MAX][MAX];
 int Dy[] = {-1, 1, 0, 0};
 int Dx[] = {0, 0, -1, 1};
 
-void spredVirus(queue<POS> Queue){
+void spredVirus(queue<POS> Q){
     int time=0, infect_cnt=0; // 걸린 시간, 감염된 칸
     while (!Q.empty()){
         int y = Q.front().y;
@@ -30,10 +30,10 @@ void spredVirus(queue<POS> Queue){
             int ny = y + Dy[d];
             int nx = x + Dx[d];
             if(ny<1 || ny>N || nx<1 || nx>N || Map[ny][nx]==WALL || Time[ny][nx]!=-1) continue; // 범위를 벗어나는 경우, 벽인 경우, 이미 방문한 경우
-            Time[nx][ny] = Time[x][y]+1;
+            Time[ny][nx] = Time[y][x]+1;
             if(Map[ny][nx]!=VIRUS){
                 infect_cnt++;
-                time = Time[nx][ny];
+                time = Time[ny][nx];
             }
             Q.push({ny, nx});
         }
@@ -44,7 +44,7 @@ void spredVirus(queue<POS> Queue){
 void setVirus(int idx, int cnt){ // backtracking 
     if(cnt==M){
         queue<POS> Q;
-        memset(Time, -1, sizeof(Time));
+        memset(Time, -1, sizeof(Time)); // 초기화
         for(int i=0; i<Virus.size(); i++){
             if(Active[i]){
                 int y = Virus[i].y;
@@ -53,14 +53,14 @@ void setVirus(int idx, int cnt){ // backtracking
                 Q.push({y, x});
             }
         }
-        spredVirus(Q);
+        spredVirus(Q); // 바이러스 확산
         return ;
     }
     for(int i=idx; i<Virus.size(); i++){
         if(Active[i]) continue;
-        Active[i] = true;
+        Active[i] = true; // Active on
         setVirus(idx+1, cnt+1);
-        Active[i] = false;
+        Active[i] = false; // Active off
     }
 }
 
@@ -71,10 +71,10 @@ int main(){
         for(int j=1; j<=N; j++) {
             cin >> Map[i][j];
             if(Map[i][j]==EMPTY) empty_cnt++; // 빈 공간 count -> 나중에 모두 
-            if(Map[i][j]==VIRUS) Virus.push_back({i, j});
+            if(Map[i][j]==VIRUS) Virus.push_back({i, j}); // 바이러스 위치 저장
         }
     }
-    setVirus(0, 0);
+    setVirus(0, 0); // backtraking 
     if(ans==INF) cout << -1;
     else cout << ans;
 }
