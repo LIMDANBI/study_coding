@@ -19,21 +19,6 @@ int priority[MAXSHARK][4][4]; //  각 상어의 방향 우선순위 (ex. priorit
 int dy[] = { -1, 1, 0, 0 };  // 위, 아래, 왼쪽, 오른쪽 (1, 2, 3, 4) / 1~4 -> 0~3
 int dx[] = { 0, 0, -1, 1 };
 
-
-void printMap() { // for debugging
-	for (int i = 0; i < N; i++) { // 격자 상태 입력
-		for (int j = 0; j < N; j++) cout << map[i][j] << ' ';
-		cout << '\n';
-	}
-}
-
-void printSmell() { // for debugging
-	for (int i = 0; i < N; i++) { // 격자 상태 입력
-		for (int j = 0; j < N; j++) cout << smell[i][j].remain_smell << ' ';
-		cout << '\n';
-	}
-}
-
 void input() {
 	cin >> N >> M >> K;
 	for (int i = 0; i < N; i++) { // 격자 상태 입력
@@ -70,7 +55,7 @@ bool isContinue() { // 다른 상어가 남아 있는지 확인
 void moveShark() { // 상어이동 + 냄새뿌림
 	memset(tmpMap, EMPTY, sizeof(tmpMap)); // 초기화
 	memset(tmpSmell, EMPTY, sizeof(tmpSmell)); // 초기화
-;	for (int i = 1; i <= M; i++) { // 상어들이 동시에 움직임
+	for (int i = 1; i <= M; i++) { // 상어들이 동시에 움직임
 		if (!shark[i].isin) continue; // 상어가 격자 밖으로 나간 경우는 pass
 		int y = shark[i].y; // i번 상어의 현재 위치
 		int x = shark[i].x; // i번 상어의 현재 위치
