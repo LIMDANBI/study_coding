@@ -10,13 +10,6 @@ int Count[MAX];
 int A[MAX][MAX];
 int rowNum = 3, colNum = 3; // 행 개수, 열 개수
 
-void printMap() { // for debugging
-	for (int i = 1; i <= rowNum; i++) {
-		for (int j = 1; j <= colNum; j++) cout << A[i][j] << " ";
-		cout << '\n';
-	}
-}
-
 void input() {
 	cin >> r >> c >> k;
 	for (int i = 1; i <= 3; i++) {
