@@ -30,14 +30,6 @@ int dh[5][2][3] = { // dh[1][1][0] 오른쪽을 바라볼 때 c 좌표 0번째
 	{{ 1, 1, 1 }, { 1, 0, -1 }}, // 아래
 };
 
-//void printMap() { // for check state
-//	cout << '\n';
-//	for (int i = 1; i <= R; i++) {
-//		for (int j = 1; j <= C; j++) cout << temperature[i][j] << ' ';
-//		cout << '\n';
-//	}
-//}
-
 void input() {
 	cin >> R >> C >> K;
 	for (int i = 1; i <= R; i++) { //  집 상태 정보
