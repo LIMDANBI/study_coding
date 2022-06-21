@@ -8,7 +8,7 @@ int main(){
     int N, M; cin >> N >> M;
     for(int i=0; i<N; i++){
         string s; cin >> s;
-        for(int j=0; j<M; j++) map[i][j] = map[j];
+        for(int j=0; j<M; j++) map[i][j] = s[j];
     }
     for(int i=0; i<N; i++){
         for(int j=0; j<M; j++){
