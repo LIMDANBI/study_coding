@@ -11,20 +11,19 @@ int solution(vector<int> priorities, int location) {
         pq.push(priorities[i]);
         q.push({priorities[i], i});
     }
-    while(!pq.empty()){
-        int now = pq.top();
-        pq.pop();
-        answer++;
-        while(!q.empty()){
-            int priority = q.front().first;
-            int idx = q.front().second;
-            if(now == priority){
-                q.pop();
-                if(location == idx) return answer; // 몇 번째로 출력되는지 알고 싶은 location
-                break;
-            }
+    pair<int, int> tmp;
+    while(!q.empty()){
+        if(q.front().first == pq.top() && q.front().second == location) break;
+        else if(q.front().first == pq.top()){
             q.pop();
-            q.push({priority, idx});   
+            pq.pop();
+            answer++;
+        }
+        else{
+            tmp = q.front();
+            q.pop();
+            q.push(tmp);
         }
     }
+    return answer+1;
 }
