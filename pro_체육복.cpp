@@ -2,7 +2,7 @@
 #include <vector>
 using namespace std;
 
-int student[31];
+int student[32];
 
 int solution(int n, vector<int> lost, vector<int> reserve) {
     int answer = 0;
