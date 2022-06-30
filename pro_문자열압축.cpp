@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <iostream>
 using namespace std;
 
 int solution(string s) {
@@ -12,7 +11,7 @@ int solution(string s) {
         prev = s.substr(0, unit); // 이전 문자열 묶음
         res = ""; // 압축된 문자열
         cnt=1, start=0;
-        for(start=unit; start<=len-unit; start+=unit){
+        for(start=unit; start<len; start+=unit){
             string tmp = s.substr(start, unit);
             if(prev == tmp) cnt++;
             else{
@@ -22,11 +21,8 @@ int solution(string s) {
                 prev=tmp;
             }
         }
-        if(cnt==1) res+=s.substr(start-unit);
-        else{
-            res+=to_string(cnt);
-            res+=prev;
-        }
+        if(cnt>1) res+=to_string(cnt);
+        res+=prev;
         int res_len = res.length();
         answer = min(answer, res_len);
     }
