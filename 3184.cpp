@@ -10,8 +10,9 @@ using namespace std;
 int dy[] = {-1,1,0,0};
 int dx[] = {0,0,-1,1};
 
+int map[MAX][MAX];
 bool visit[MAX][MAX];
-int sheep=0, wolf=0, R, C, map[MAX][MAX];
+int sheep=0, wolf=0, R, C;
 
 void bfs(int i, int j){
     queue<pair<int, int>> q;
@@ -20,14 +21,14 @@ void bfs(int i, int j){
     while (!q.empty()){
         int y = q.front().first;
         int x = q.front().second;
-        visit[y][x] = true;
         q.pop();
+        visit[y][x] = true;
         if(map[y][x] == WOLF) w++;
         else if(map[y][x] == SHEEP) s++;
         for(int d=0; d<4; d++){
             int ny = y+dy[d];
             int nx = x+dx[d];
-            if(visit[ny][nx] || map[ny][nx]==FENCE || ny<0 || ny>=R || nx<0 || nx>=C) continue; // 울타리인 경우 범위에서 벗어나는 경우
+            if(visit[ny][nx] || map[ny][nx]==FENCE || ny<0 || ny>=R || nx<0 || nx>=C) continue; // 이미 방문한 경우, 울타리인 경우, 격자에서 벗어나는 경우
             q.push({ny, nx});
         }
     }
