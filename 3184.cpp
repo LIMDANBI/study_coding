@@ -16,25 +16,25 @@ int sheep=0, wolf=0, R, C;
 
 void bfs(int i, int j){
     queue<pair<int, int>> q;
-    int w=0, s=0; // 같은 영역 안 늑대 수 , 양 수
+    int w=0, s=0; // 같은 영역 안 늑대 수, 양 수
     q.push({i,j});
     while (!q.empty()){
         int y = q.front().first;
         int x = q.front().second;
         q.pop();
-        visit[y][x] = true;
         if(map[y][x] == WOLF) w++;
         else if(map[y][x] == SHEEP) s++;
         for(int d=0; d<4; d++){
             int ny = y+dy[d];
             int nx = x+dx[d];
             if(visit[ny][nx] || map[ny][nx]==FENCE || ny<0 || ny>=R || nx<0 || nx>=C) continue; // 이미 방문한 경우, 울타리인 경우, 격자에서 벗어나는 경우
+            visit[ny][nx] = true;
             q.push({ny, nx});
         }
     }
-    if(w!=0 && s!=0){
-        if(w<s) wolf-=w;
-        else sheep-=s;
+    if(w!=0 && s!=0){ // 같은 영역 안에 양과 늑대가 모두 있는 경우
+        if(w<s) wolf-=w; // 양이 더 많은 경우
+        else sheep-=s; // 늑대가 더 많거나, 양과 늑대의 수가 같은 경우
     }
 }
 
@@ -60,6 +60,7 @@ int main(){
     for(int i=0; i<R; i++){
         for(int j=0; j<C; j++){
             if(visit[i][j] || map[i][j]==FENCE) continue;
+            visit[i][j] = true;
             bfs(i, j);
         }
     }
