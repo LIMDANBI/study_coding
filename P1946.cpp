@@ -3,10 +3,12 @@
 #include<vector>
 using namespace std; 
 
+int T, N, a, b, ans;
+vector<pair<int, int>> v;
+
 int main(){
     ios_base::sync_with_stdio(0); cin.tie(0);
-    int T, N, a, b, ans; cin >> T;
-    vector<pair<int, int>> v;
+    cin >> T;
     while (T--){
         cin >> N;
         ans = 1;
