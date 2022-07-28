@@ -29,7 +29,8 @@ int main(){
     for(int w=0; w<N; w++){ // width
         for(int h=0; h<M; h++){ // height
             for(int i=0; i<N-w; i++){ // row
-                for(int j=0; j<M-h; j++) ans = max(ans, solution(i, j, w, h)); // col
+                for(int j=0; j<M-h; j++) // col
+                    ans = max(ans, solution(i, j, w, h));
             }
         }
     }
