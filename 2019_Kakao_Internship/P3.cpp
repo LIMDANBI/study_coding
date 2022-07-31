@@ -24,7 +24,10 @@ void dfs(int idx){
 
         bool iscorrespond = true; // uid와 bid가 대응하는지
         for(int i=0; i<uid.size(); i++){
-            if(bid[i]!='*' && uid[i]!=bid[i]) iscorrespond = false; // 대응되지 않는 경우 
+            if(bid[i]!='*' && uid[i]!=bid[i]) { // 대응되지 않는 경우 
+                iscorrespond = false;
+                break;
+            }
         }
 
         if(!iscorrespond) continue;
