@@ -37,7 +37,7 @@ void sudoku(int r, int c){
         exit(0);
     }
     if(c==9) sudoku(r+1, 0);
-    if(map[r][c]==0){
+    else if(map[r][c]==0){
         for(int num=1; num<10; num++){ // backtracking
             if(promising(r, c, num)){
                 map[r][c] = num;
@@ -46,6 +46,7 @@ void sudoku(int r, int c){
             }
         }
     }
+    else sudoku(r, c+1);
 }
 
 int main(){
