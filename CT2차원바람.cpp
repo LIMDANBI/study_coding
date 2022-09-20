@@ -24,9 +24,9 @@ void copy(){
 void rotate(){
     int tmp = map[r1][c2];
     for(int col=c2; col>c1; col--) map[r1][col] = map[r1][col-1]; // up
-    for(int row=r1; row<r2; row++) map[row][c1] = map[row+1][c1]; // right
+    for(int row=r1; row<r2; row++) map[row][c1] = map[row+1][c1]; // left
     for(int col=c1; col<c2; col++) map[r2][col] = map[r2][col+1]; // down
-    for(int row=r2; row>r1; row--) map[row][c2] = map[row-1][c2]; // left
+    for(int row=r2; row>r1; row--) map[row][c2] = map[row-1][c2]; // right
     map[r1+1][c2] = tmp;
 }
 
