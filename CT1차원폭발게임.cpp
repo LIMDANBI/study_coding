@@ -3,56 +3,50 @@
 #define MAX 101
 using namespace std;
 
-int N, M, map[MAX], tmp_map[MAX];
+int N, M, len, map[MAX];
 
 void input(){
-    cin >> N >> M;
-    for(int i=N; i>0; i--) cin >> map[i];
+    cin >> N >> M; len=N;
+    for(int i=0; i<N; i++) cin >> map[i];
+}
+
+int getEndIdx(int start_idx){
+    int end_idx = start_idx+1;
+    while(end_idx < len){
+        if(map[end_idx]==map[start_idx]) end_idx++;
+        else break;
+    }
+    return end_idx-1;
+}
+
+void cutMap(int start_idx, int end_idx){
+    int cut_len = end_idx-start_idx+1;
+    for(int i = end_idx+1; i<len; i++) map[i-cut_len] = map[i];
+    len-=cut_len;
 }
 
 void solution(){
-    int len=N;
-    while(1){
-        int idx=1, cnt=1;
-        bool flag = true;
-        int before = map[1];
-        for(int i=2; i<=N; i++){
-            if(map[i]==before) cnt++;
-            else{
-                if(cnt>=M) {
-                    flag = false;
-                    len-=cnt;
-                }
-                else{
-                    for(int j=0; j<cnt; j++){
-                        tmp_map[idx] = before;
-                        idx++;
-                    }
-                }
-                before = map[i];
-                cnt = 1;
-            }
+    int cur_idx;
+    bool flag;
+
+    do{
+        cur_idx = 0;
+        flag = false;
+
+        while(cur_idx < len){
+            int end_idx = getEndIdx(cur_idx);
+            if(end_idx-cur_idx+1>=M){
+                cutMap(cur_idx, end_idx);
+                flag = true;
+            } 
+            else cur_idx = end_idx+1;
         }
-        if(cnt>=M) {
-            flag = false;
-            len-=cnt;
-        }
-        else{
-            for(int j=0; j<cnt; j++){
-                tmp_map[idx] = before;
-                idx++;
-            }
-        }
-        N = len;
-        for(int i=1; i<=N; i++) map[i] = tmp_map[i];
-        memset(tmp_map, 0, sizeof(tmp_map));
-        if(flag) break;
-    }
+    } while(flag);
 }
 
 void output(){
-    cout << N << "\n";
-    for(int i=N; i>0; i--) cout << map[i] << "\n";
+    cout << len << "\n";
+    for(int i=0; i<len; i++) cout << map[i] << "\n";
 }
 
 int main(){
