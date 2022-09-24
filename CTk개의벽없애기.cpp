@@ -57,11 +57,14 @@ void solution(int idx, int cnt){
         ans = min(ans, bfs());
         return;
     }
-    int y = pos[idx].first;
-    int x = pos[idx].second;
-    map[y][x] = 0;
-    solution(idx+1, cnt+1);
-    map[y][x] = 1;
+    for(int i=idx; i<(int)pos.size(); i++){
+        int y = pos[i].first;
+        int x = pos[i].second;
+        if(map[y][x]==0) continue;
+        map[y][x] = 0;
+        solution(i+1, cnt+1);
+        map[y][x] = 1;
+    }
 }
 
 int main(){
