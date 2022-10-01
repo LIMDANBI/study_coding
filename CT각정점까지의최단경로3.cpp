@@ -9,7 +9,6 @@ struct edge{int end, cost;};
 
 int n, m;
 int dist[MAX];
-bool visited[MAX];
 vector<edge> v[MAX];
 
 void input(){
@@ -31,8 +30,10 @@ void solution(){
     pq.push({0, 1});
     init();
     while(!pq.empty()){
+        int now_cost = -pq.top().first;
         int now_node = pq.top().second;
         pq.pop();
+        if(dist[now_node] < now_cost) continue; // 시간 초과 방지
         for(int i=0; i<v[now_node].size(); i++){
             int next_cost = v[now_node][i].cost;
             int next_node = v[now_node][i].end;
