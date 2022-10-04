@@ -8,9 +8,9 @@ using namespace std;
 int n, m, ans=0;
 int map[MAX][MAX];
 
-int ay[] = {0, 1, 0, -1};
+int ay[] = {0, 1, 0, -1}; // for attack
 int ax[] = {1, 0, -1, 0};
-int dy[] = {0, 1, 0, -1};
+int dy[] = {0, 1, 0, -1}; // for spiral
 int dx[] = {-1, 0, 1, 0};
 
 void input(){
