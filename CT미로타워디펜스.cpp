@@ -20,7 +20,7 @@ void input(){
     }
 }
 
-void print_map(){
+void print_map(){ // for debugging
     for(int i=0; i<n; i++){
         for(int j=0; j<n; j++) cout << map[i][j] << " ";
         cout << "\n";
@@ -142,7 +142,7 @@ void list_up_monster(){
         if(x<0) break;
     }
 
-    // queue to amp
+    // queue to map
     memset(map, 0, sizeof(map));
     y=n/2; x=n/2; cnt = 0;
     for(int d=0; x>=0 && !q.empty(); d++){ d%=4;
