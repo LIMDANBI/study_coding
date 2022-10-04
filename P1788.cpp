@@ -16,8 +16,7 @@ void solution(){
     // dynamic programming
     dp[0]=0; dp[1]=1;
     for(int i=2; i<=n; i++) dp[i] = (dp[i-1]%MOD+dp[i-2]%MOD)%MOD;
-    if(n<0) cout << sign << "\n" << dp[n];
-    else cout << sign << "\n" << dp[n];
+    cout << sign << "\n" << dp[n];
 }
 
 int main(){
