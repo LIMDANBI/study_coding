@@ -9,7 +9,7 @@ using namespace std;
 
 struct MAL{
     int y, x, d;
-} mals[10];
+} mals[MAX];
 
 int N, K;
 int color[MAX][MAX];
