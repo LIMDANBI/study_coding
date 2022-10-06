@@ -33,8 +33,8 @@ void move_atom(int y, int x){ // 원자의 이동
         int m = atom[y][x][i].m;
         int s = atom[y][x][i].s;
         int d = atom[y][x][i].d;
-        int ny = y+dy[d]*s; ny%=N; if(ny<0)ny+=N;
-        int nx = x+dx[d]*s; nx%=N; if(nx<0)nx+=N;
+        int ny = y+dy[d]*s+N*s; ny%=N;
+        int nx = x+dx[d]*s+N*s; nx%=N;
         tmp_atom[ny][nx].push_back({m,s,d});
     }
 }
