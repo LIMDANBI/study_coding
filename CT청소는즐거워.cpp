@@ -10,7 +10,7 @@ int lrx[] = {1, 0, -1, 0, 1, 0, -1, 0};
 int udy[] = {-1, 0, 1, 0, -1, 0, 1, 0};
 int udx[] = {-1, -1, -1, -2, 1, 1, 1, 2};
 int rat[] = {1, 7, 10, 2, 1, 7, 10, 2}; 
-int ratio2[] = {10, 7, 1, 2, 10, 7, 1, 2}; 
+int rat2[] = {10, 7, 1, 2, 10, 7, 1, 2}; 
 
 void input(){
     cin >> n;
@@ -36,27 +36,20 @@ int move_dust(int y, int x, int total_dust, int d){ // 격자 밖으로 떨어�
     int amount, a=total_dust;
     map[y][x] = 0; // 청소 
 
-    if(d%2){ // 상, 하
-        for(int i=0; i<8; i++){
+    for(int i=0; i<8; i++){
+        if(d%2){
             ny = y+udy[i];
             nx = x+udx[i];
-            if(d==1) amount = total_dust*rat[i]/100;
-            if(d==3) amount = total_dust*ratio2[i]/100;
-            if(!in_range(ny, nx)) res+=amount;
-            else map[ny][nx]+=amount;
-            a-=amount;
         }
-    }
-    else{ // 좌, 우 
-        for(int i=0; i<8; i++){
+        else{
             ny = y+lry[i];
             nx = x+lrx[i];
-            if(d==0) amount = total_dust*rat[i]/100;
-            if(d==2) amount = total_dust*ratio2[i]/100;
-            if(!in_range(ny, nx)) res+=amount;
-            else map[ny][nx]+=amount;
-            a-=amount;
         }
+        if(d<2) amount = total_dust*rat[i]/100;
+        else amount = total_dust*rat2[i]/100;
+        if(!in_range(ny, nx)) res+=amount;
+        else map[ny][nx]+=amount;
+        a-=amount;
     }
 
     // 자기 방향
