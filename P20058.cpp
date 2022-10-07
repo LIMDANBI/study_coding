@@ -28,15 +28,8 @@ void copy_and_init(){
     }
 }
 
-void print_map(){
-    for(int i=0; i<n; i++){
-        for(int j=0; j<n; j++) cout << map[i][j] << " ";
-        cout << "\n";
-    } cout << "\n";
-}
-
-void rotate_ice(int r){
-    int criteria = pown[r]; // 기준 
+void rotate_ice(int L){
+    int criteria = pown[L]; // 기준 
     for(int y=0; y<n; y+=criteria){
         for(int x=0; x<n; x+=criteria){
             // 빙하의 특정 범위를 시계방향으로 회전 
@@ -69,8 +62,8 @@ void input(){
         for(int j=0; j<n; j++) cin >> map[i][j];
     }
     while(Q--){
-        int r; cin >> r;
-        rotate_ice(r);
+        int L; cin >> L;
+        rotate_ice(L);
         melt_ice();
     }
 }
