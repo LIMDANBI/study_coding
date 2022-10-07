@@ -1,95 +1,116 @@
 #include<iostream>
-#include<cstring>
 #include<queue>
 #define MAX 65
 using namespace std;
 
-int N, Q, L;
-int remain_ice=0,largest_mass=0;
-int A[MAX][MAX];
-bool visit[MAX][MAX], reduce[MAX][MAX];
+int N, Q, n;
+bool visited[MAX][MAX];
+int map[MAX][MAX], tmp_map[MAX][MAX];
+int pown[] = {1, 2, 4, 8, 16, 32, 64};
 int dy[] = {-1, 1, 0, 0};
 int dx[] = {0, 0, -1, 1};
-int pow2[] = {1, 2, 4, 8, 16, 32, 64};
 
-void fireStorm(){
-    for(int i=1; i<=N; i+=L){ // 시계 방향 회전
-        for(int j=1; j<=N; j+=L){
-            queue<int> q;
-            int endR = i+L;
-            int endC = j+L;
-            for(int r=i; r<endR; r++){
-                for(int c=j; c<endC; c++) q.push(A[r][c]);
-            }
-            for(int c=endC-1; c>=j; c--){
-                for(int r=i; r<endR; r++){
-                    A[r][c] = q.front();
-                    q.pop();
-                }
-            }
-        }
-    }
-
-    memset(reduce, false, sizeof(reduce)); // 감소 여부 false로 초기화
-    for(int y=1; y<=N; y++){ // 얼음양 감소
-        for(int x=1; x<=N; x++){
-            int cnt=0;
-            for(int d=0; d<4; d++){
-                int ny = y+dy[d];
-                int nx = x+dx[d];
-                if(ny<1 || ny>N || nx<1 || nx>N || A[ny][nx]==0) continue; // 범위를 벗어나거나 얼음이 없는 경우
-                cnt++; 
-            }
-            if(cnt<3 && A[y][x]>0) reduce[y][x] = true; // 얼음이 있는 칸 3개 또는 그 이상과 인접해있지 않은 경우, 감소 여부 true
-        }
-    }
-    for(int y=1; y<=N; y++){
-        for(int x=1; x<=N; x++){
-            if(reduce[y][x]) A[y][x]--;
+void add_and_init(){
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++) {
+            map[i][j]+=tmp_map[i][j];
+            tmp_map[i][j] = 0;
         }
     }
 }
 
-void bfs(int i, int j){ // largest_mass
-    int res = 1;
+void copy_and_init(){
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++) {
+            map[i][j] = tmp_map[i][j];
+            tmp_map[i][j] = 0;
+        }
+    }
+}
+
+void print_map(){
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++) cout << map[i][j] << " ";
+        cout << "\n";
+    } cout << "\n";
+}
+
+void rotate_ice(int r){
+    int criteria = pown[r]; // 기준 
+    for(int y=0; y<n; y+=criteria){
+        for(int x=0; x<n; x+=criteria){
+            // 빙하의 특정 범위를 시계방향으로 회전 
+            for(int i=0; i<criteria; i++){
+                for(int j=0; j<criteria; j++) tmp_map[y+j][x+criteria-i-1] = map[y+i][x+j];
+            }
+        }
+    } copy_and_init();
+}
+
+void melt_ice(){
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+            if(!map[i][j]) continue; // 얼음이 없는 경우
+            int cnt = 0;
+            for(int d=0; d<4; d++){
+                int ny = i+dy[d];
+                int nx = j+dx[d];
+                if(ny<0 || ny>=n || nx<0 || nx>=n || !map[ny][nx]) continue; // 범위를 벗어나거나, 얼음이 없는 경우 
+                cnt++;
+            }
+            if(cnt<3) tmp_map[i][j] = -1; // 얼음 녹음 (인접한 칸에 얼음이 3개 이상 있지 않은 경우 )
+        }
+    } add_and_init();
+}
+
+void input(){
+    cin >> N >> Q; n = pown[N];
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++) cin >> map[i][j];
+    }
+    while(Q--){
+        int r; cin >> r;
+        rotate_ice(r);
+        melt_ice();
+    }
+}
+
+int bfs(int i, int j){
     queue<pair<int, int>> q;
-    visit[i][j]=true;
-    q.push({i, j});
-    while (!q.empty()){
+    visited[i][j] = true;
+    q.push({i,j});
+
+    int res = 1;
+    while(!q.empty()){
         int y = q.front().first;
         int x = q.front().second;
         q.pop();
         for(int d=0; d<4; d++){
             int ny = y+dy[d];
             int nx = x+dx[d];
-            if(ny<1 || ny>N || nx<1 || nx>N || visit[ny][nx] || A[ny][nx]<1) continue; // 범위를 벗어나는 경우, 이미 방문한 경우, 얼음이 없는 경우
-            visit[ny][nx] = true;
-            q.push({ny, nx});
+            if(ny<0 || ny>=n || nx<0 || nx>=n) continue; // 범위를 벗어나는 경우 
+            if(!map[ny][nx] || visited[ny][nx]) continue; // 얼음이 없거나, 이미 방문한 경우 
+            visited[ny][nx] = true;
+            q.push({ny,nx});
             res++;
         }
     }
-    largest_mass = max(largest_mass, res);
+    return res;
 }
 
-void ans(){
-    for(int i=1; i<=N; i++){
-        for(int j=1; j<=N; j++) {
-            remain_ice+=A[i][j]; // remain_ice
-            if(!visit[i][j] && A[i][j]) bfs(i, j); // largest_mass
+void output(){
+    int remain=0;
+    int cluster=0;
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++) {
+            remain+=map[i][j];
+            if(!visited[i][j] && map[i][j]) cluster = max(cluster, bfs(i,j));
         }
-    }
-    cout << remain_ice << '\n' << largest_mass;
+    } cout << remain << "\n" << cluster;
 }
 
 int main(){
     ios_base::sync_with_stdio(0); cin.tie(0);
-    cin >> N >> Q; N = pow2[N];
-    for(int i=1; i<=N; i++){
-        for(int j=1; j<=N; j++) cin >> A[i][j];
-    }
-    while(Q--){ // 파이어스톰을 Q번 시전
-        cin >> L; L= pow2[L];
-        fireStorm();
-    }
-    ans(); // remain_ice와 largest_mass를 구하고 출력
+    input();
+    output();
 }
