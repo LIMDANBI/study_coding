@@ -35,23 +35,18 @@ def solution(fees, records):
             total_miniute[i]+=calculate_min(tstamp[i], "23:59")
     
     # 3. 주차 요금 계산
-    result = []
+    fee = []
     for i in range(cnt):
         if total_miniute[i]<=fees[0]:
-            result.append(fees[1])
+            fee.append(fees[1])
         else:
-            result.append(fees[1]+math.ceil((total_miniute[i]-fees[0])/fees[2])*fees[3])
+            fee.append(fees[1]+math.ceil((total_miniute[i]-fees[0])/fees[2])*fees[3])
     
     # 4. 차량 번호가 작은 자동차부터 청구할 주차 요금을 차례대로 정수 배열에 담아서 return
+    cars = list(car_num_to_idx.keys()) # dict to list
     car_and_fee = []
-    tmp = {}
-    idx = 0
-    for r in records:
-        num = r.split(' ')[1]
-        if not num in tmp:
-            tmp[num] = 0
-            car_and_fee.append([num, result[idx]])
-            idx+=1
+    for i in range(len(cars)):
+        car_and_fee.append([cars[i], fee[i]])
     car_and_fee = sorted(car_and_fee)
     for i in range(len(car_and_fee)):
         answer.append(car_and_fee[i][1])
