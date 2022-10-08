@@ -47,7 +47,7 @@ def solution(fees, records):
     car_and_fee = []
     for i in range(len(cars)):
         car_and_fee.append([cars[i], fee[i]])
-    car_and_fee = sorted(car_and_fee)
+    car_and_fee = sorted(car_and_fee) # 정렬 
     for i in range(len(car_and_fee)):
         answer.append(car_and_fee[i][1])
     return answer
