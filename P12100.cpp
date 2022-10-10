@@ -8,8 +8,6 @@ int N, ans = 0;
 int map[MAX][MAX];
 int tmp_map[MAX][MAX];
 int moved_map[MAX][MAX];
-int dy[] = { -1,1,0,0 };
-int dx[] = { 0,0,-1,1 };
 
 vector<int> move_dir;
 
@@ -18,13 +16,6 @@ void input() {
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < N; j++) cin >> map[i][j];
 	}
-}
-
-void print_map() {
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) cout << tmp_map[i][j] << " ";
-		cout << "\n";
-	} cout << "\n";
 }
 
 void copy_tmp_map() {
