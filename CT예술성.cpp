@@ -112,14 +112,6 @@ void get_art_score() {
 	art_score_of_two_group(0, 0);
 }
 
-void print_map() {
-	cout << "\n";
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) cout << TMP_MAP[i][j] << " ";
-		cout << "\n";
-	} 
-}
-
 void rotate_square(int y1, int x1, int y2, int x2) {
 	int mid = n / 2;
 	for (int i = 0; i < mid; i++) {
