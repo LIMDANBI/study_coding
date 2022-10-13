@@ -44,7 +44,7 @@ void input() {
 		int dir; cin >> dir;
 		player[i].dir = dir - 1;  // 1~4 -> 0~3
 	}
-	for (int i = 1; i <= M; i++) { // i번째 상어가
+	for (int i = 1; i <= M; i++) { // i번째 플레이어가
 		for (int j = 0; j < 4; j++) { // j번째 방향을 보고 있을 때
 			for (int k = 0; k < 4; k++) { // 우선 순위 방향 4가지 순서대로
 				cin >> priority[i][j][k];
