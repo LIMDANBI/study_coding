@@ -120,7 +120,7 @@ void print_map() {
 	} 
 }
 
-void rotate_square(int y1, int x1, int y2, int x2) {
+void rotate_square(int y1, int x1) {
 	int mid = n / 2;
 	for (int i = 0; i < mid; i++) {
 		for (int j = 0; j < mid; j++) TMP_MAP[y1 + j][x1 - i + mid - 1] = MAP[y1 + i][x1 + j];
@@ -139,10 +139,10 @@ void rotate() {
 	TMP_MAP[mid][mid] = MAP[mid][mid]; // 중앙
 
 	// 2. 정사각형 시계 방향 90' 회전
-	rotate_square(0, 0, mid - 1, mid - 1); // 좌상
-	rotate_square(0, mid + 1, mid - 1, n - 1); // 우상
-	rotate_square(mid + 1, 0, n - 1, mid - 1); // 좌하
-	rotate_square(mid + 1, mid + 1, n - 1, n - 1); // 우하
+	rotate_square(0, 0); // 좌상
+	rotate_square(0, mid + 1); // 우상
+	rotate_square(mid + 1, 0); // 좌하
+	rotate_square(mid + 1, mid + 1); // 우하
 	//print_map();
 	
 	// 3. copy TMP_MAP to MAP
