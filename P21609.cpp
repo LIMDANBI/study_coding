@@ -7,149 +7,183 @@
 #define RAINBOW 0
 using namespace std;
 
-int N, M, ans=0;
-bool isPlay = true;
-int map[MAX][MAX];
-bool visit[MAX][MAX];
-int dy[] = {-1, 1, 0, 0};
-int dx[] = {0, 0, -1, 1};
-
-struct POS { int y, x; };
-struct GROUP { int cnt, rbow, y, x; };
-struct compare{
-    bool operator()(const GROUP& g1, const GROUP& g2) { // operator() 메서드 재정의
-        if(g1.cnt == g2.cnt){
-            if(g1.rbow == g2.rbow){
-                if(g1.y == g2.y) return g1.x < g2.x;
-                return g1.y < g2.y;   
-            }
-            return g1.rbow < g2.rbow;
-        }
-		return g1.cnt < g2.cnt;
+struct BLOCK
+{
+	int size, rainbow, row, col;
+	bool operator < (const BLOCK &b) const {
+		if (size == b.size) {
+			if (rainbow == b.rainbow) {
+				if (row == b.row) return col < b.col; // 기준 블록의 열이 가장 큰 것 (4)
+				return row < b.row; // 기준 블록의 행이 가장 큰 것 (3)
+			} return rainbow < b.rainbow; // 무지개 블록의 수가 가장 많은 블록 그룹 (2)
+		} return size < b.size; // 가장 큰 블록 그룹 (1)
 	}
 };
-priority_queue<GROUP, vector<GROUP>, compare> blockGroup; // 기준 block
 
-void init(){
-    memset(visit, false, sizeof(visit));
-    while(!blockGroup.empty()) blockGroup.pop();
+int N, M;
+int ans = 0;
+bool isEnd = false;
+int map[MAX][MAX];
+int tmp_map[MAX][MAX];
+bool visited[MAX][MAX];
+int dy[] = { -1, 1, 0, 0 };
+int dx[] = { 0, 0, -1, 1 };
+
+void input() {
+	cin >> N >> M;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) cin >> map[i][j];
+	}
 }
 
-void turnRainbow(){ // 무지개는 중복으로 가질 수 o
-    for(int i=1; i<=N; i++){
-        for(int j=1; j<=N; j++){
-            if(map[i][j]==RAINBOW) visit[i][j]=false;
-        }
-    }  
+//void print_map() {
+//	cout << "\n";
+//	for (int i = 0; i < N; i++) {
+//		for (int j = 0; j < N; j++) {
+//			if (map[i][j] == EMPTY) cout << "  ";
+//			else cout << map[i][j] << " ";
+//		}
+//		cout << "\n";
+//	}
+//}
+
+void turn_on_rainbow() {
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (map[i][j] == RAINBOW) visited[i][j] = false;
+		}
+	}
 }
 
-pair<int, int> findGroup(int i, int j, int color){
-    int groupSize=1;
-    int rbowSize=0;
-    queue<POS> q;
-    visit[i][j] = true;
-    q.push({i, j});
-    while (!q.empty()){
-        int y = q.front().y;
-        int x = q.front().x;
-        q.pop();
-        for(int d=0; d<4; d++){
-            int ny = y + dy[d];
-            int nx = x + dx[d];
-            if(ny<1 || ny>N || nx<1 || nx>N) continue; // 범위를 벗어나는 경우
-            if(map[ny][nx]==EMPTY || visit[ny][nx]) continue; // 비어 있거나, 이미 방문한 경우
-            if(map[ny][nx]==BLACK || map[ny][nx]!=RAINBOW && map[ny][nx]!=color) continue; // black block이거나 다른 색인 경우 (무지개는 허용)
-            if(map[ny][nx]==RAINBOW) rbowSize++;
-            visit[ny][nx] = true; // 방문
-            groupSize++;
-            q.push({ny, nx});
-        }
-    }
-    return {groupSize, rbowSize};
+pair<int, int> bfs(int i, int j, int num) {
+
+	queue<pair<int, int>> q;
+	visited[i][j] = true;
+	q.push({ i,j });
+	int size = 1;
+	int rbow = 0;
+
+	while (!q.empty()) {
+		int y = q.front().first;
+		int x = q.front().second;
+		q.pop();
+		for (int d = 0; d < 4; d++) {
+			int ny = y + dy[d];
+			int nx = x + dx[d];
+			if (ny < 0 || ny >= N || nx < 0 || nx >= N) continue;
+			if (visited[ny][nx] || map[ny][nx] == EMPTY || map[ny][nx] == BLACK) continue;
+			if (map[ny][nx] != RAINBOW && map[ny][nx] != num) continue;
+			if (map[ny][nx] == RAINBOW) rbow++;
+			visited[ny][nx] = true;
+			q.push({ ny,nx });
+			size++;
+		}
+	}
+	return { size, rbow };
 }
 
-void rmeoveGroup(){
-    queue<POS> q;
-    int cnt = blockGroup.top().cnt;
-    ans+=cnt*cnt; //  B^2점을 획득
-    int y = blockGroup.top().y;
-    int x = blockGroup.top().x;
-    int color=map[y][x];
-    map[y][x] = EMPTY;
-    visit[y][x] = true;
-    q.push({y, x});
-    while (!q.empty()){
-        int y = q.front().y;
-        int x = q.front().x;
-        q.pop();
-        for(int d=0; d<4; d++){
-            int ny = y + dy[d];
-            int nx = x + dx[d];
-            if(ny<1 || ny>N || nx<1 || nx>N) continue; // 범위를 벗어나는 경우
-            if(map[ny][nx]==EMPTY || visit[ny][nx]) continue; // 비어 있거나, 이미 방문한 경우
-            if(map[ny][nx]==BLACK || map[ny][nx]!=RAINBOW && map[ny][nx]!=color) continue; // black block이거나 다른 색인 경우 (무지개는 허용)
-            visit[ny][nx] = true;
-            map[ny][nx] = EMPTY;
-            q.push({ny, nx});
-        }
-    }
+pair<int, int> find_block_group() {
+
+	memset(visited, false, sizeof(visited));
+	priority_queue<BLOCK> pq;
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (visited[i][j] || map[i][j] == RAINBOW || map[i][j] == BLACK || map[i][j] == EMPTY) continue;
+			pair<int, int> res = bfs(i, j, map[i][j]);
+			turn_on_rainbow(); // 무지개는 중복으로 가질 수 있음!
+			if (res.first >= 2) pq.push({ res.first, res.second, i, j });
+		}
+	}
+
+	if (pq.empty()) {  // 더 이상 블록 그룹이 없는 경우
+		isEnd = true;
+		return { -1, -1 };
+	}
+
+	// 점수 획득 
+	int B = pq.top().size;
+	ans += B * B;
+
+	return { pq.top().row, pq.top().col };  // 우선순위가 높은 블록 그룹의 기준점
 }
 
-void gravityAction(){ // 격자에 중력 작용
-    for(int j=1; j<=N; j++){
-        for(int i=N; i>0; i--){
-            if(map[i][j]!=EMPTY) continue;
-            int y = i;
-            while(y>1 && map[y][j]==EMPTY) y--;
-            if(map[y][j]==BLACK) continue;
-            map[i][j] = map[y][j];
-            map[y][j] = EMPTY;
-        }
-    }
+void remove_block_group(int y, int x, int num) {
+	memset(visited, false, sizeof(visited));
+	queue<pair<int, int>> q;
+	visited[y][x] = true;
+	map[y][x] = EMPTY;
+	q.push({ y,x });
+
+	while (!q.empty()) {
+		y = q.front().first;
+		x = q.front().second;
+		q.pop();
+		for (int d = 0; d < 4; d++) {
+			int ny = y + dy[d];
+			int nx = x + dx[d];
+			if (ny < 0 || ny >= N || nx < 0 || nx >= N || visited[ny][nx]) continue;
+			if (map[ny][nx] == num || map[ny][nx] == RAINBOW) {
+				visited[ny][nx] = true;
+				map[ny][nx] = EMPTY;
+				q.push({ ny,nx });
+			}
+		}
+	}	
 }
 
-void counterclockwiseRotation(){ // 반시계 방향으로 90도 회전
-    queue<int> q;
-    for(int i=1; i<=N; i++){
-        for(int j=N; j>0; j--) q.push(map[i][j]);
-    }
-    for(int j=1; j<=N; j++){
-        for(int i=1; i<=N; i++){
-            map[i][j] = q.front();
-            q.pop();
-        }
-    }
+void gravity_map() {
+
+	// 1. tmp_map => EMPTY로 초기화 
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) tmp_map[i][j] = EMPTY;
+	}
+
+	// 2. 중력 작용
+	for (int col = 0; col < N; col++) {
+		int idx = N - 1;
+		for (int row = N - 1; row >= 0; row--) {
+			if (map[row][col] == EMPTY) continue;
+			else if (map[row][col] == BLACK) idx = row;
+			tmp_map[idx--][col] = map[row][col];
+		}
+	}
+
+	// 3. tmp_map to map
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) map[i][j] = tmp_map[i][j];
+	}
 }
 
-
-void autoPlay(){ // 블록 그룹이 존재하는 동안 반복
-    init(); // 초기화
-    for(int i=1; i<=N; i++){ // 블록 그룹 정보 저장
-        for(int j=1; j<=N; j++){
-            if(map[i][j]==BLACK || map[i][j]==RAINBOW || map[i][j]==EMPTY || visit[i][j]) continue;
-            pair<int, int> res = findGroup(i, j, map[i][j]); // BFS로 group check
-            turnRainbow(); // 무지개는 중복으로 가질 수 o
-            int cnt=res.first, rbow=res.second;
-            if(cnt>=2) blockGroup.push({cnt, rbow, i, j}); // 기준 block을 pq에 저장 (그룹에 속한 블록의 개수는 2보다 크거나 같아야 함)
-        }
-    }
-    if(blockGroup.size()==0){
-        isPlay = false;
-        return ;
-    }
-    memset(visit, false, sizeof(visit));
-    rmeoveGroup(); // 찾은 블록 그룹의 모든 블록 제거
-    gravityAction(); // 격자에 중력 작용
-    counterclockwiseRotation(); // 격자가 90도 반시계 방향으로 회전
-    gravityAction(); // 격자에 중력 작용
+void rotate_map() { // 격자가 90도 반시계 방향으로 회전
+	for (int row = 0; row < N; row++) {
+		for (int col = 0; col < N; col++) tmp_map[N - 1 - col][row] = map[row][col];
+	}
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) map[i][j] = tmp_map[i][j];
+	}
 }
 
-int main(){
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    cin >> N >> M;
-    for(int i=1; i<=N; i++){
-        for(int j=1; j<=N; j++) cin >> map[i][j];
-    }
-    while(isPlay) autoPlay(); // 블록 그룹이 존재하는 동안 반복
-    cout << ans;
+int main() {
+	ios_base::sync_with_stdio(0); cin.tie(0);
+	input();
+	while (1) { // auto play
+
+		// 1. 크기가 가장 큰 블록 그룹을 찾음
+		pair<int, int> pos = find_block_group();
+		if (isEnd) break; // 더 이상 블록 그룹이 없는 경우
+
+		// 2. 찾은 블록그룹의 모든 블록을 제거
+		remove_block_group(pos.first, pos.second, map[pos.first][pos.second]);
+
+		// 3. 격자에 중력 작용
+		gravity_map();
+
+		// 4. 격자가 90' 반시계 방향으로 회전
+		rotate_map();
+
+		// 5. 다시 한번 격자에 중력 작용 
+		gravity_map();
+	}
+	cout << ans; // 획득한 점수의 합
 }
