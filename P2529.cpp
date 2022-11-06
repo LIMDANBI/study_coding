@@ -4,14 +4,16 @@
 using namespace std;
 
 int k;
-long long min_val = 10000000001;
-long long max_val = 0;
-
 string min_str = "", max_str = "";
+long long min_num = 10000000001, max_num = 0;
 
 bool isuse[10];
 vector<char> v;
-vector<int> num;
+
+bool compare(int a, int b, char c){
+    if(c == '<') return a < b;
+    return a > b;
+}
 
 void input(){
     cin >> k;
@@ -22,57 +24,40 @@ void input(){
     }
 }
 
-void backtracking(int cnt){
-    if(cnt == k){
-        bool flag = true;
-        for(int i=0; i<k; i++){
-            if(v[i]=='<'){
-                if(num[i] >= num[i+1]){
-                    flag = false;
-                    break;
-                }
-            }
-            else{
-                if(num[i] <= num[i+1]){
-                    flag = false;
-                    break;
-                }
-            }
+void backtracking(int cnt, string res){
+    if(cnt == k+1){
+        long long lnum = stol(res);
+        if(lnum < min_num){
+            min_num = lnum;
+            min_str = res;
         }
-        if(flag){
-            string str = "";
-            for(int i=0; i<k+1; i++) str+=to_string(num[i]);
-            long long str_to_num = stoull(str);
-            if(str_to_num < min_val){
-                min_val = str_to_num;
-                min_str = str;
-            }
-            if(max_val < str_to_num){
-                max_val = str_to_num;
-                max_str = str;
-            }
+        if(max_num < lnum){
+            max_num = lnum;
+            max_str = res;
         }
         return ; 
     }
     for(int i=0; i<10; i++){
         if(isuse[i]) continue;
-        isuse[i] = true;
-        num.push_back(i);
-        backtracking(cnt+1);
-        num.pop_back();
-        isuse[i] = false;
+        if(cnt == 0){
+            isuse[i] = true;
+            backtracking(cnt+1, res+to_string(i));
+            isuse[i] = false;
+        }
+        else{
+            int before = res[cnt-1] - '0';
+            if(compare(before, i, v[cnt-1])){
+                isuse[i] = true;
+                backtracking(cnt+1, res+to_string(i));
+                isuse[i] = false;
+            }
+        }
     }
 }
 
 int main(){
     ios_base::sync_with_stdio(0); cin.tie(0);
     input();
-    for(int i=0; i<10; i++){
-        isuse[i] = true;
-        num.push_back(i);
-        backtracking(0);
-        num.pop_back();
-        isuse[i] = false;
-    }
+    backtracking(0, "");
     cout << max_str << "\n" << min_str;
 }
