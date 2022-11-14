@@ -1,4 +1,5 @@
 #include<iostream>
+#include<algorithm>
 #include<string>
 using namespace std;
 
@@ -6,18 +7,16 @@ int ans;
 string str; // 숫자판의 정보
 int changeCnt; // 교환 횟수
 
-void change(int cnt, string num){
+void change(int cnt, int idx){
     if(cnt == changeCnt){
-        ans = max(ans, stoi(num));
+        ans = max(ans, stoi(str));
         return ; 
     }
-    for(int i=0; i<num.size()-1; i++){
-        for(int j=i+1; j<num.size(); j++){
-            string changedNum = num;
-            char tmp = num[j];
-            changedNum[j] = num[i];
-            changedNum[i] = tmp; 
-            change(cnt+1, changedNum);
+    for(int i=idx; i<str.size()-1; i++){
+        for(int j=i+1; j<str.size(); j++){
+            swap(str[i], str[j]);
+            change(cnt+1, i);
+            swap(str[j], str[i]);
         }
     }
 }
@@ -28,8 +27,8 @@ int main(){
     for(int t=1; t<=T; t++){
         ans = 0;
         cin >> str >> changeCnt;
-        if(changeCnt>str.size()) changeCnt = str.size();
-        change(0, str);
+        changeCnt = min(changeCnt, (int)str.size()); // 필요없는 중복 교환 제거
+        change(0, 0);
         cout << "#" << t << " " << ans << "\n";
     }
 }
