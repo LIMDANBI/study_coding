@@ -18,30 +18,34 @@ void input(){
     isfind = false;
 }
 
-bool isPalindrome(string str){
-    int mid = str.size()/2;
-    for(int i=0; i<mid; i++){
-        if(str[i] != str[str.size()-1-i]) return false;
-    }
-    return true;
-}
-
 void findPalindrome(int L){
     for(int i=0; i<MAX; i++){
         for(int j=0; j<MAX; j++){
             if(i+L<=MAX){
-                string str = "";
-                for(int k=0; k<L; k++) str+=arr[i+k][j];
-                if(isPalindrome(str)){
+                bool flag = true;
+                int mid = L/2;
+                for(int k=0; k<=mid; k++){
+                    if(arr[i+k][j] != arr[i+L-1-k][j]){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
                     isfind = true;
                     ans = L;
                     return;
                 }
             }
             if(j+L<=MAX){
-                string str = "";
-                for(int k=0; k<L; k++) str+=arr[i][j+k];
-                if(isPalindrome(str)){
+                bool flag = true;
+                int mid = L/2;
+                for(int k=0; k<=mid; k++){
+                    if(arr[i][j+k] != arr[i][j+L-1-k]){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
                     isfind = true;
                     ans = L;
                     return;
