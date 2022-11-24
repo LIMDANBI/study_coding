@@ -4,13 +4,12 @@
 #define MAX 100001
 using namespace std;
 
-int N;
+int N, cnt;
 int arr[MAX];
 bool isteam[MAX], visited[MAX];
 
-vector<int> v;
-
 void init(){
+    cnt = 0;
     memset(isteam, false, sizeof(isteam));
     memset(visited, false, sizeof(visited));
 }
@@ -20,37 +19,23 @@ void input(){
     for(int i=1; i<=N; i++) cin >> arr[i];
 }
 
-void dfs(int start, int next){
-    if(visited[next]){ // 이미 방문한 경우
-        if(start == next){
-            for(int i=0; i<v.size(); i++) isteam[v[i]] = true;
-        }
-        else{
-            for(int i=0; i<v.size(); i++) visited[v[i]] = false;
-        }
-        return;
+void dfs(int node){
+    visited[node] = true;
+    int next = arr[node];
+
+    if(!visited[next]) dfs(next);
+    else if(!isteam[next]){
+        for(int i=next; i!=node; i = arr[i]) cnt++;
+        cnt++;
     }
-    visited[next] = true;
-    v.push_back(next);
-    dfs(start, arr[next]);
+    isteam[node] = true;
 }
 
 void solution(){
     for(int start=1; start<=N; start++){
-        int next = arr[start];
-        if(visited[next]) continue;
-        visited[start] = true;
-        v.push_back(start);
-        dfs(start, next);
-        v.clear();
+        if(visited[start]) continue;
+        dfs(start);
     }
-}
-
-void output(){
-    int ans = 0; // 프로젝트 팀에 속하지 못한 학생들의 수
-    for(int i=1; i<=N; i++){
-        if(!isteam[i]) ans++;
-    } cout << ans << "\n";
 }
 
 int main(){
@@ -60,6 +45,6 @@ int main(){
         init();
         input();
         solution();
-        output();
+        cout << N-cnt << "\n";
     }
 }
