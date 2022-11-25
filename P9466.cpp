@@ -1,6 +1,5 @@
 #include<iostream>
 #include<cstring>
-#include<vector>
 #define MAX 100001
 using namespace std;
 
@@ -36,6 +35,7 @@ void solution(){
         if(visited[start]) continue;
         dfs(start);
     }
+    cout << N-cnt << "\n"; // 프로젝트 팀에 속하지 못한 학생들의 수
 }
 
 int main(){
@@ -45,6 +45,5 @@ int main(){
         init();
         input();
         solution();
-        cout << N-cnt << "\n";
     }
 }
